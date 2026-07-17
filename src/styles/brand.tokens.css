@@ -1,0 +1,29 @@
+/*
+ * ⭐ brand.tokens.css — restyling a fork = editing THIS ONE FILE.
+ *
+ * Tailwind v4 is CSS-first: these custom properties are exposed to utility
+ * classes via the @theme block in global.css. Change the hexes + fonts here
+ * and the whole site re-skins. Contrast note: gate:a11y checks AA (4.5:1 body,
+ * 3:1 large/UI) — keep --brand-primary dark enough on --brand-surface.
+ */
+
+:root {
+  /* Colour */
+  --brand-primary: #1a3a5c; /* deep structural blue — headings, primary CTA */
+  --brand-primary-ink: #ffffff; /* text on primary */
+  --brand-accent: #c2410c; /* burnt orange — hi-vis accent, links, focus */
+  --brand-ink: #1c1917; /* body text */
+  --brand-muted: #57534e; /* secondary text (AA on surface) */
+  --brand-surface: #ffffff; /* page background */
+  --brand-surface-2: #f5f5f4; /* alternating section background */
+  --brand-border: #d6d3d1;
+
+  /* Type — self-hosted woff2 only (see public/fonts + global.css @font-face) */
+  --font-head: 'Barlow Condensed', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* Shape / rhythm */
+  --radius: 0.5rem;
+  --container: 72rem;
+  --section-y: clamp(2.5rem, 6vw, 5rem);
+}

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business } from '../data/business-info.ts';
+const hasEmail = !business.email.startsWith('TODO_');
+---
+
+<BaseLayout title={`Privacy | ${business.displayName}`} description="How this site handles your information." path="/privacy" noindex={true}>
+  <section class="container legal">
+    <h1>Privacy</h1>
+    <p>
+      {business.legalName} (ABN {business.abn}) collects the details you submit through the quote
+      form — your name, phone, suburb and job description — for the sole purpose of responding to
+      your enquiry. We don't sell your information or use it for anything else.
+    </p>
+    <p>This site uses cookieless analytics; it does not track you across other sites.</p>
+    {hasEmail && <p>To ask what we hold or to have it deleted, email <a href={`mailto:${business.email}`}>{business.email}</a>.</p>}
+    <p class="muted">This is a plain-English summary. Replace with your reviewed privacy policy before launch.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal { max-width: 60ch; }
+  h1 { color: var(--brand-primary); }
+  .muted { color: var(--brand-muted); font-size: 0.9rem; }
+</style>

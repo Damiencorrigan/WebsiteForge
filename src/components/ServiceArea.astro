@@ -1,0 +1,49 @@
+---
+/** Ranked suburb list — the same array that feeds areaServed in JSON-LD. */
+import { business } from '../data/business-info.ts';
+---
+
+<section id="areas" class="areas" aria-labelledby="areas-h">
+  <div class="container">
+    <h2 id="areas-h">Where we work</h2>
+    <p class="lead">
+      {business.displayName} covers {business.address.locality} and the surrounding areas:
+    </p>
+    <ul class="suburbs" role="list">
+      {business.serviceAreas.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="muted">Not sure if you're in the run? Ask — we travel for the right job.</p>
+  </div>
+</section>
+
+<style>
+  .areas {
+    background: var(--brand-surface-2);
+  }
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--brand-primary);
+    margin-bottom: 0.75rem;
+  }
+  .lead {
+    margin-bottom: 1rem;
+  }
+  .suburbs {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+  .suburbs li {
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-weight: 500;
+  }
+  .muted {
+    color: var(--brand-muted);
+  }
+</style>

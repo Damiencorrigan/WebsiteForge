@@ -1,0 +1,78 @@
+---
+import { business } from '../data/business-info.ts';
+const telHref = `tel:${business.phone.replace(/\s+/g, '')}`;
+const hasPhone = !business.phone.startsWith('TODO_');
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label={`${business.displayName} — home`}>
+      {business.displayName}
+    </a>
+    <nav aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#areas">Areas</a>
+      <a href="#quote" class="btn btn-accent nav-cta">Get a quote</a>
+      {
+        hasPhone && (
+          <a href={telHref} class="nav-call">
+            {business.phoneDisplay}
+          </a>
+        )
+      }
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--brand-surface) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--brand-border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+    gap: 1rem;
+  }
+  .brand {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  /* Exclude .btn so the accent CTA keeps its own white text (contrast AA). */
+  nav a:not(.btn) {
+    color: var(--brand-ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  nav a:not(.btn):hover {
+    color: var(--brand-accent);
+  }
+  .nav-call {
+    font-weight: 600;
+    color: var(--brand-primary) !important;
+  }
+  @media (max-width: 640px) {
+    nav a:not(.nav-cta):not(.nav-call) {
+      display: none;
+    }
+    .brand {
+      font-size: 1.2rem;
+    }
+  }
+</style>

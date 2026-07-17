@@ -1,0 +1,67 @@
+---
+/** Footer NAP is GENERATED from business-info — never typed twice. */
+import { business } from '../data/business-info.ts';
+const hasPhone = !business.phone.startsWith('TODO_');
+const hasEmail = !business.email.startsWith('TODO_');
+const year = new Date().getFullYear();
+const socials = Object.entries(business.socials).filter(([, v]) => v);
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="foot-name">{business.legalName}</p>
+      <p class="muted">ABN {business.abn}</p>
+      <p class="muted">
+        {business.address.locality}, {business.address.region}, {business.address.country}
+      </p>
+    </div>
+    <div>
+      <p class="foot-h">Contact</p>
+      {hasPhone && <p><a href={`tel:${business.phone.replace(/\s+/g, '')}`}>{business.phoneDisplay}</a></p>}
+      {hasEmail && <p><a href={`mailto:${business.email}`}>{business.email}</a></p>}
+      <p class="muted">Mon–Fri {business.hours.mon_fri} · Sat {business.hours.sat}</p>
+    </div>
+    <div>
+      <p class="foot-h">More</p>
+      <p><a href="/privacy">Privacy</a></p>
+      {socials.map(([k, v]) => (<p><a href={v as string} rel="me">{k}</a></p>))}
+    </div>
+  </div>
+  <div class="container">
+    <p class="muted copyright">© {year} {business.legalName}. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--brand-primary);
+    color: #e7e5e4;
+    padding-block: 3rem 1.5rem;
+    margin-top: 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  .site-footer a {
+    color: #fff;
+  }
+  .foot-name {
+    font-weight: 600;
+  }
+  .foot-h {
+    font-family: var(--font-head);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .muted {
+    color: #a8a29e;
+  }
+  .copyright {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+  }
+</style>

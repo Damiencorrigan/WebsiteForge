@@ -1,0 +1,39 @@
+---
+/** Mobile sticky call bar — tappable tel:, always visible on phones. */
+import { business } from '../data/business-info.ts';
+const hasPhone = !business.phone.startsWith('TODO_');
+const telHref = `tel:${business.phone.replace(/\s+/g, '')}`;
+---
+
+{
+  hasPhone && (
+    <a href={telHref} class="sticky-call" aria-label={`Call ${business.displayName}`}>
+      <span aria-hidden="true">📞</span> Call {business.phoneDisplay}
+    </a>
+  )
+}
+
+<style>
+  .sticky-call {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .sticky-call {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 52px;
+      background: var(--brand-accent);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 -2px 12px rgb(0 0 0 / 0.15);
+    }
+  }
+</style>

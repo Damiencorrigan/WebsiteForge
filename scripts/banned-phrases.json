@@ -1,0 +1,16 @@
+{
+  "_comment": "Per-trade banned-phrase lists for the copy gate. 'common' always applies; add a per-trade key and set the trade in the gate invocation if needed. Patterns are case-insensitive regex fragments matched as whole phrases. Tune per client's regulator.",
+  "common": [
+    "\\bguarantee(d|s)?\\b",
+    "\\bcheapest\\b",
+    "\\bbest in (perth|wa|australia)\\b",
+    "\\bnumber one\\b",
+    "\\b#1\\b",
+    "\\b100% (guaranteed|satisfaction)\\b",
+    "\\bfully licen[sc]ed\\b",
+    "\\bno hidden (fees|costs)\\b"
+  ],
+  "carpentry": [],
+  "electrical": ["\\bany electrical work\\b"],
+  "plumbing": []
+}

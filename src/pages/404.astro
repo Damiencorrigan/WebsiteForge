@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business } from '../data/business-info.ts';
+---
+
+<BaseLayout title={`Page not found | ${business.displayName}`} description="That page doesn't exist." path="/404" noindex={true}>
+  <section class="container nf">
+    <h1>Page not found</h1>
+    <p>That page doesn't exist — but we're still on the tools.</p>
+    <p><a class="btn btn-accent" href="/">Back to home</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { min-height: 50vh; }
+  h1 { color: var(--brand-primary); font-size: clamp(2rem, 6vw, 3rem); }
+</style>

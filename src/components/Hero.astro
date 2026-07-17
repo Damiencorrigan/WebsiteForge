@@ -1,0 +1,85 @@
+---
+/**
+ * Hero — one H1, primary CTA visible without scroll on a 380px phone.
+ * Hero photo (when supplied) goes through Astro <Image> (srcset/webp, explicit
+ * dims, fetchpriority="high"). It is NEVER also a CSS background — that
+ * double-load is the TradeBridge antipattern. When no photo exists yet, a
+ * styled gradient stands in so the build is clean and intentional.
+ */
+import { business } from '../data/business-info.ts';
+
+const hasPhone = !business.phone.startsWith('TODO_');
+const telHref = `tel:${business.phone.replace(/\s+/g, '')}`;
+const headTerm = 'Carpentry & Formwork in Perth';
+const sub =
+  'Licensed, insured, 25 years on the tools. Straight framing, clean formwork pours, and second-fix that lands on program.';
+// TODO(Damien): drop a hero photo at src/assets/hero.jpg and import it here as
+//   `import hero from '../assets/hero.jpg'` + <Image src={hero} .../>.
+---
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <h1>{headTerm}</h1>
+      <p class="hero-sub">{sub}</p>
+      <div class="hero-cta">
+        <a href="#quote" class="btn btn-accent">Get a quote</a>
+        {hasPhone && <a href={telHref} class="btn btn-ghost hero-call">Call {business.phoneDisplay}</a>}
+      </div>
+    </div>
+    <div class="hero-media" role="img" aria-label="Formwork and framing on a Perth site — photo to come">
+      <!-- TODO(Damien): replace this block with the <Image> hero photo. -->
+      <span class="hero-media-note">Job photo goes here</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--brand-surface-2);
+    padding-block: clamp(2rem, 6vw, 4.5rem);
+  }
+  .hero-inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    color: var(--brand-primary);
+    margin: 0 0 1rem;
+  }
+  .hero-sub {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    color: var(--brand-ink);
+    max-width: 46ch;
+    margin: 0 0 1.75rem;
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-media {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--brand-primary), #24506f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-weight: 600;
+  }
+  .hero-media-note {
+    opacity: 0.7;
+  }
+  @media (max-width: 720px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+    .hero-media {
+      order: -1;
+    }
+  }
+</style>

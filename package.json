@@ -1,0 +1,36 @@
+{
+  "name": "websiteforge-template",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Canonical Astro 5 + Tailwind v4 forge template every WebsiteForge lead-gen site forks. One data file drives NAP + JSON-LD; every quality gate is an npm script that fails the build.",
+  "engines": {
+    "node": ">=18.20.8"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "gate:copy": "node scripts/copy-gate.mjs",
+    "gate:links": "node scripts/check-links.mjs",
+    "gate:a11y": "playwright test tests/a11y.spec.ts",
+    "gate:e2e": "playwright test tests/smoke.spec.ts",
+    "gate:lh": "lhci autorun",
+    "gate": "npm run gate:copy && npm run build && npm run gate:links && npm run gate:a11y && npm run gate:e2e && npm run gate:lh"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@tailwindcss/vite": "^4.0.6",
+    "astro": "^5.6.1",
+    "tailwindcss": "^4.0.6"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@biomejs/biome": "^1.9.4",
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "^1.50.1"
+  }
+}

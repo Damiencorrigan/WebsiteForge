@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business } from '../data/business-info.ts';
+const hasPhone = !business.phone.startsWith('TODO_');
+---
+
+<BaseLayout title={`Thanks | ${business.displayName}`} description="Your enquiry has been sent." path="/thanks" noindex={true}>
+  <section class="container thanks">
+    <h1>Thanks — that's in.</h1>
+    <p>We've got your enquiry and will be in touch shortly.</p>
+    {hasPhone && <p>Need us sooner? Call <a href={`tel:${business.phone.replace(/\s+/g, '')}`}>{business.phoneDisplay}</a>.</p>}
+    <p><a class="btn btn-ghost" href="/">Back to home</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks { min-height: 50vh; }
+  h1 { color: var(--brand-primary); font-size: clamp(2rem, 6vw, 3rem); }
+</style>

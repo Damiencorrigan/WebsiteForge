@@ -1,0 +1,200 @@
+---
+/**
+ * QuoteForm — the conversion surface. Accessibility + anti-spam + the
+ * response-read contract are all load-bearing:
+ *  - every field <label>led; errors announced via aria-live
+ *  - honeypot field (visually hidden, aria-hidden) catches bots
+ *  - consent is a REAL labelled checkbox
+ *  - client JS READS the server response and shows a real failure state
+ *    (the TradeBridge fire-and-forget bug class is designed out here)
+ *
+ * Backend adapter chosen from business.formBackend.
+ */
+import { business } from '../data/business-info.ts';
+import { netlifyAdapter, appsScriptAdapter, resendAdapter } from '../lib/form-backend/index.ts';
+
+const adapter =
+  business.formBackend === 'apps-script'
+    ? appsScriptAdapter
+    : business.formBackend === 'resend'
+      ? resendAdapter
+      : netlifyAdapter;
+
+const isNetlify = adapter.id === 'netlify';
+---
+
+<section id="quote" class="quote" aria-labelledby="quote-h">
+  <div class="container quote-inner">
+    <div class="quote-copy">
+      <h2 id="quote-h">Get a quote</h2>
+      <p>Tell us about the job and we'll get back to you. No obligation.</p>
+    </div>
+
+    <form
+      id="quote-form"
+      class="quote-form"
+      method="POST"
+      action={adapter.action}
+      data-backend={adapter.id}
+      {...isNetlify ? { 'data-netlify': 'true', 'netlify-honeypot': 'bot-field' } : {}}
+    >
+      {Object.entries(adapter.hiddenFields).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
+
+      {/* Honeypot — visually hidden, ignored by humans, filled by bots. */}
+      <p class="hp" aria-hidden="true">
+        <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="field">
+        <label for="qf-name">Your name</label>
+        <input id="qf-name" name="name" type="text" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="qf-phone">Phone</label>
+        <input id="qf-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" />
+      </div>
+      <div class="field">
+        <label for="qf-suburb">Suburb</label>
+        <input id="qf-suburb" name="suburb" type="text" autocomplete="address-level2" />
+      </div>
+      <div class="field">
+        <label for="qf-job">Type of work</label>
+        <select id="qf-job" name="job_type">
+          <option value="formwork">Formwork</option>
+          <option value="framing">Framing &amp; structural</option>
+          <option value="fitout">Fit-out &amp; fixing</option>
+          <option value="outdoor">Deck / pergola / outdoor</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="qf-msg">The job (optional)</label>
+        <textarea id="qf-msg" name="message" rows="4"></textarea>
+      </div>
+
+      <div class="field consent">
+        <input id="qf-consent" name="consent" type="checkbox" required />
+        <label for="qf-consent">I'm happy to be contacted about this enquiry.</label>
+      </div>
+
+      <button type="submit" class="btn btn-accent">Send enquiry</button>
+
+      <p id="qf-status" class="qf-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement | null;
+  const status = document.getElementById('qf-status');
+  if (form && status) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = 'Sending…';
+      status.dataset.state = 'pending';
+      const data = new FormData(form);
+      // Honeypot tripped → pretend success, drop silently.
+      if (data.get('bot-field')) {
+        window.location.href = '/thanks';
+        return;
+      }
+      const backend = form.dataset.backend;
+      try {
+        // Netlify Forms accept a urlencoded POST to the same origin.
+        const body =
+          backend === 'netlify'
+            ? new URLSearchParams(data as unknown as Record<string, string>).toString()
+            : (data as unknown as BodyInit);
+        const res = await fetch(form.action || '/', {
+          method: 'POST',
+          ...(backend === 'netlify'
+            ? { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body }
+            : { body }),
+        });
+        // Read the response — a real failure state, never fire-and-forget.
+        if (res.ok) {
+          window.location.href = '/thanks';
+        } else {
+          status.dataset.state = 'error';
+          status.textContent =
+            'Something went wrong sending that. Please call us instead, or try again.';
+        }
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent =
+          'Could not reach the server. Please check your connection or call us.';
+      }
+    });
+  }
+</script>
+
+<style>
+  .quote {
+    background: var(--brand-surface);
+  }
+  .quote-inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--brand-primary);
+  }
+  .quote-form {
+    display: grid;
+    gap: 1rem;
+    background: var(--brand-surface-2);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--brand-border);
+  }
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+  label {
+    font-weight: 600;
+  }
+  input,
+  select,
+  textarea {
+    font: inherit;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius);
+    background: #fff;
+    min-height: 44px;
+  }
+  .consent {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.6rem;
+  }
+  .consent input {
+    min-height: auto;
+    width: 22px;
+    height: 22px;
+    margin-top: 0.15rem;
+  }
+  .consent label {
+    font-weight: 400;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .qf-status {
+    margin: 0;
+    min-height: 1.2em;
+  }
+  .qf-status[data-state='error'] {
+    color: #b91c1c;
+    font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .quote-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

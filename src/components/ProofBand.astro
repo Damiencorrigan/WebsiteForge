@@ -1,0 +1,56 @@
+---
+/** Proof band — licences, insurance, ABN, years, reviews. Reads business-info.
+ *  Only renders facts that are actually filled (no empty "Public liability ."). */
+import { business } from '../data/business-info.ts';
+
+const insuranceReady = business.insurance && !business.insurance.startsWith('TODO_');
+const proofs = [
+  { big: `${business.yearsOnTools}+`, small: 'years on the tools' },
+  ...(insuranceReady ? [{ big: '🛡', small: business.insurance }] : []),
+  ...business.licences.map((l) => ({ big: '📋', small: `${l.type} ${l.number}`.trim() })),
+  { big: 'ABN', small: business.abn },
+];
+---
+
+<section class="proof" aria-label="Credentials">
+  <div class="container proof-inner">
+    {
+      proofs.map((p) => (
+        <div class="proof-item">
+          <span class="proof-big">{p.big}</span>
+          <span class="proof-small">{p.small}</span>
+        </div>
+      ))
+    }
+  </div>
+  {/* TODO(Damien): drop 2–4 testimonials (first name + suburb ok) here. */}
+</section>
+
+<style>
+  .proof {
+    background: var(--brand-primary);
+    color: #fff;
+    padding-block: 2rem;
+  }
+  .proof-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+    justify-content: center;
+    text-align: center;
+  }
+  .proof-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .proof-big {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  .proof-small {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+  }
+</style>

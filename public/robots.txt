@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://corrigancarpentry.com.au/sitemap-index.xml

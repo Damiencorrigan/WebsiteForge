@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ServicesGrid from '../components/ServicesGrid.astro';
+import ProofBand from '../components/ProofBand.astro';
+import ServiceArea from '../components/ServiceArea.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import { business } from '../data/business-info.ts';
+
+const title = `Carpenter & Formwork Contractor in Perth | ${business.displayName}`;
+const description =
+  'Carpentry and formwork in Perth, WA. Licensed, insured, 25 years on the tools — framing, formwork pours, fit-outs and outdoor. Get a quote.';
+---
+
+<BaseLayout title={title} description={description} path="/">
+  <Hero />
+  <ProofBand />
+  <ServicesGrid />
+  <ServiceArea />
+  <QuoteForm />
+</BaseLayout>

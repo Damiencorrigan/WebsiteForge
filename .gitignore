@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# gate artifacts
+.lighthouseci/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# env / secrets — NEVER commit
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+*.log
